@@ -71,7 +71,6 @@ export default function LocationFigure({
       onPointerOver={handlePointerOver}
       onPointerOut={handlePointerOut}
     >
-      {/* Invisible hit area to prevent hover twitching when moving across sub-meshes */}
       <mesh onPointerOver={handlePointerOver} onPointerOut={handlePointerOut}>
         <sphereGeometry args={[1.25, 16, 16]} />
         <meshBasicMaterial transparent opacity={0} depthWrite={false} />

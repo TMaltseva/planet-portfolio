@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
+import { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import { Vector3 } from 'three';
 import type { TourPoint } from '../../types';
 
@@ -20,7 +21,7 @@ export default function CameraController({
   const [transitionPhase, setTransitionPhase] = useState<'intro' | 'settling' | 'controls'>('intro');
   const startTime = useRef<number | null>(null);
   const settlingStartTime = useRef<number | null>(null);
-  const orbitControlsRef = useRef<any>(null);
+  const orbitControlsRef = useRef<OrbitControlsImpl>(null);
   
   const introDuration = 4000;
   const settlingDuration = 1000;
@@ -100,8 +101,8 @@ export default function CameraController({
         <OrbitControls
           ref={orbitControlsRef}
           target={[0, 0, 0]}
-          minDistance={30}
-          maxDistance={80}
+          minDistance={45}
+          maxDistance={120}
           minPolarAngle={Math.PI * 0.1}
           maxPolarAngle={Math.PI * 0.4}
           minAzimuthAngle={-Math.PI * 0.25}
@@ -112,6 +113,7 @@ export default function CameraController({
           enableRotate={true}
           dampingFactor={0.1}
           rotateSpeed={-0.5}
+          zoomSpeed={0.5}
           enabled={transitionPhase === 'controls'}
         />
       )}
