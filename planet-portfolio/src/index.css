@@ -11,6 +11,64 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.neon-line {
+  display: inline-flex;
+}
+
+.neon-char {
+  position: relative;
+  display: inline-block;
+  color: #fffbe6;
+  text-shadow:
+    0 0 2px #fff3b0,
+    0 0 6px rgba(255, 218, 67, 0.5),
+    0 0 14px rgba(255, 153, 0, 0.35);
+  animation: neon-flicker 5s infinite ease-in-out;
+  animation-delay: var(--d, 0s);
+}
+
+.neon-char:nth-child(3n+1) {
+  color: #eaffff;
+  text-shadow:
+    0 0 2px #b6fcff,
+    0 0 8px rgba(96, 246, 255, 0.65),
+    0 0 18px rgba(0, 204, 255, 0.45);
+}
+.neon-char:nth-child(3n+2) {
+  color: #ffe8f7;
+  text-shadow:
+    0 0 2px #ffc0e9,
+    0 0 8px rgba(255, 102, 204, 0.6),
+    0 0 18px rgba(255, 51, 153, 0.45);
+}
+.neon-char:nth-child(3n+3) {
+  color: #fff7da;
+  text-shadow:
+    0 0 2px #ffe9a6,
+    0 0 8px rgba(255, 201, 71, 0.65),
+    0 0 18px rgba(255, 136, 0, 0.45);
+}
+
+@keyframes neon-flicker {
+  0% { opacity: 0.9; filter: drop-shadow(0 0 0px rgba(255,230,100,0.0)); }
+  3% { opacity: 0.2; }
+  6% { opacity: 0.95; }
+  7% { opacity: 0.4; }
+  8% { opacity: 1; }
+  9% { opacity: 0.7; }
+  10% { opacity: 1; }
+  30% { opacity: 1; }
+  35% { opacity: 0.85; }
+  36% { opacity: 1; }
+  60% { opacity: 1; }
+  62% { opacity: 0.5; }
+  63% { opacity: 1; }
+  80% { opacity: 0.95; }
+  81% { opacity: 0.6; }
+  82% { opacity: 1; }
+  100% { opacity: 0.98; filter: drop-shadow(0 0 10px rgba(255, 196, 38, 0.55)) drop-shadow(0 0 24px rgba(255, 115, 0, 0.35)); }
+}
+
 /* 
 a {
   font-weight: 500;

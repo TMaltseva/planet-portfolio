@@ -10,6 +10,7 @@ import { useTour } from './hooks/useTour';
 import { TOUR_POINTS } from './data/tourPoints';
 import CameraController from './components/tour/CameraController';
 import PlaneFlyover from './components/models/PlaneFlyover';
+import NeonText from './components/ui/NeonText';
 
 export default function App() {
     const {
@@ -128,11 +129,14 @@ export default function App() {
         alignItems: 'flex-start',
       }}>
         <div>
-          <h1 style={{ fontSize: '80px', lineHeight: '1', margin: '0 0 10px 0', fontWeight: 'bold', }}>Hello, I'm Tommy!</h1>
+          <NeonText text={"Hello,"} sizePx={80} weight={800} letterSpacingPx={1} />
+          <h1 style={{ fontSize: '80px', lineHeight: '1', margin: '0 0 10px 0', fontWeight: 'bold', }}>I'm Tommy!</h1>
+
+          <div style={{ height: '8px' }} />
           <p style={{ fontSize: '36px', lineHeight: '1.2', opacity: 0.9, width: '600px', }}>
             Frontend Developer & 3D Enthusiast
           </p>
-          <p style={{ fontSize: '16px', lineHeight: '1.6', opacity: 0.7}}>
+          <p style={{ fontSize: '24px', lineHeight: '1.6', opacity: 0.7}}>
             Click on the city locations to explore my portfolio
           </p>
         </div>
