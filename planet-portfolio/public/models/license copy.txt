@@ -1,0 +1,11 @@
+Model Information:
+* title:	3D Location
+* source:	https://sketchfab.com/3d-models/3d-location-63c2ab73b27d472f89a9493c497aa8b1
+* author:	necmettinturkan (https://sketchfab.com/necmettinturkan)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "3D Location" (https://sketchfab.com/3d-models/3d-location-63c2ab73b27d472f89a9493c497aa8b1) by necmettinturkan (https://sketchfab.com/necmettinturkan) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
