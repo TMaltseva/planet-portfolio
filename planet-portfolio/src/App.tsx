@@ -4,7 +4,7 @@ import { Environment } from '@react-three/drei';
 import CityModel from './components/models/CityModel';
 import { Suspense } from 'react';
 import CloudsBackground from './components/models/CloudsBackground';
-import LoadingFallback from './components/ui/LoadingFallback';
+import ScreenLoader from './components/ui/ScreenLoader';
 import LocationFigure from './components/tour/LocationFigure';
 import { useTour } from './hooks/useTour';
 import { TOUR_POINTS } from './data/tourPoints';
@@ -27,6 +27,7 @@ export default function App() {
 
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
+      <ScreenLoader />
       <Canvas
         camera={{
           position: [70, 40, 50],
@@ -49,7 +50,7 @@ export default function App() {
         
         <Environment preset="dawn" environmentIntensity={0.8}/>
         
-        <Suspense fallback={<LoadingFallback />}>
+        <Suspense fallback={null}>
           <CloudsBackground />
           <PlaneFlyover />
           <CityModel />
