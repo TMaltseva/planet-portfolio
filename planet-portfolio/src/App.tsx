@@ -9,6 +9,7 @@ import LocationFigure from './components/tour/LocationFigure';
 import { useTour } from './hooks/useTour';
 import { TOUR_POINTS } from './data/tourPoints';
 import CameraController from './components/tour/CameraController';
+import PlaneFlyover from './components/models/PlaneFlyover';
 
 export default function App() {
     const {
@@ -50,6 +51,7 @@ export default function App() {
         
         <Suspense fallback={<LoadingFallback />}>
           <CloudsBackground />
+          <PlaneFlyover />
           <CityModel />
 
           {TOUR_POINTS.map((point, index) => (
