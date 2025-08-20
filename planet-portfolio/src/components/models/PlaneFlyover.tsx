@@ -1,79 +1,70 @@
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 import { Group } from 'three';
+import * as THREE from 'three';
 
 interface PlaneInstanceProps {
-  direction: 'left-to-right' | 'right-to-left';
-  altitude: 'top' | 'bottom';
+  startX: number;
+  endX: number;
+  y: number;
+  z: number;
+  speed: number;
+  scale: number;
+  rotationY: number;
 }
 
-function PlaneInstance({ direction, altitude }: PlaneInstanceProps) {
+function PlaneInstance({ startX, endX, y, z, speed, scale, rotationY }: PlaneInstanceProps) {
   const planeRef = useRef<Group>(null);
-  const progressRef = useRef<number>(Math.random() * 320);
+  const progressRef = useRef<number>(0);
   const { scene } = useGLTF('/models/plane.gltf');
-
-  const config = {
-    'left-to-right': {
-      xStart: -400,
-      xEnd: 400,
-      yAltitude: altitude === 'top' ? 45 : 18,
-      zLane: altitude === 'top' ? 30 : -20,
-      rotation: Math.PI / 2,
-      speedUnitsPerSecond: 35,
-    },
-    'right-to-left': {
-      xStart: 400,
-      xEnd: -400,
-      yAltitude: altitude === 'top' ? 40 : 22,
-      zLane: altitude === 'top' ? 25 : -15,
-      rotation: -Math.PI / 2,
-      speedUnitsPerSecond: 30,
-    }
-  };
-
-  const settings = config[direction];
 
   useFrame((state, delta) => {
     if (!planeRef.current) return;
-
-    progressRef.current += delta * settings.speedUnitsPerSecond;
+    progressRef.current += delta * speed;
     
-    const distance = Math.abs(settings.xEnd - settings.xStart);
-    const wrapped = (progressRef.current % distance + distance) % distance;
+    const totalDistance = endX - startX;
+    const currentX = startX + progressRef.current;
+    const bob = Math.sin(state.clock.elapsedTime * 2 + progressRef.current * 0.1) * 0.3;
     
-    let x: number;
-    if (direction === 'left-to-right') {
-      x = settings.xStart + wrapped;
-    } else {
-      x = settings.xStart - wrapped;
-    }
-
-    const t = state.clock.elapsedTime;
-    const bob = Math.sin(t * 1.5 + (altitude === 'top' ? 0 : Math.PI)) * 0.5;
-    const bank = Math.sin(t * 1.0 + (direction === 'right-to-left' ? Math.PI : 0)) * 0.08;
-    const drift = Math.sin(t * 0.6) * 1;
-
-    planeRef.current.position.set(
-      x, 
-      settings.yAltitude + bob, 
-      settings.zLane + drift
+    planeRef.current.position.set(currentX, y + bob, z);
+    
+    planeRef.current.rotation.set(
+      Math.sin(state.clock.elapsedTime * 1.5 + progressRef.current * 0.05) * 0.01,
+      rotationY,
+      Math.sin(state.clock.elapsedTime * 0.8 + progressRef.current * 0.08) * 0.02
     );
     
-    let finalRotation: number;
+    planeRef.current.scale.setScalar(scale);
     
-    if (direction === 'left-to-right') {
-      finalRotation = -Math.PI / 2;
-    } else {
-      finalRotation = Math.PI / 2;
+    const fadeStartDistance = totalDistance * 0.8;
+    
+    if (progressRef.current > fadeStartDistance) {
+      const fadeProgress = (progressRef.current - fadeStartDistance) / (totalDistance - fadeStartDistance);
+      const opacity = Math.max(0, 1 - fadeProgress);
+      
+      planeRef.current.traverse((child: THREE.Object3D) => {
+        if ((child as THREE.Mesh).isMesh && (child as THREE.Mesh).material) {
+          const mesh = child as THREE.Mesh;
+          if (Array.isArray(mesh.material)) {
+            mesh.material.forEach((mat: THREE.Material) => {
+              mat.transparent = true;
+              mat.opacity = opacity;
+            });
+          } else {
+            mesh.material.transparent = true;
+            mesh.material.opacity = opacity;
+          }
+        }
+      });
+      
+      const sizeMultiplier = 0.5 + opacity * 0.5;
+      planeRef.current.scale.setScalar(scale * sizeMultiplier);
     }
     
-    planeRef.current.rotation.set(0, finalRotation, bank);
-
-    const targetScale = altitude === 'top' ? 0.8 : 0.6;
-    const currentScale = planeRef.current.scale.x;
-    const newScale = currentScale + (targetScale - currentScale) * 0.06;
-    planeRef.current.scale.setScalar(newScale);
+    if (progressRef.current >= totalDistance) {
+      planeRef.current.visible = false;
+    }
   });
 
   return (
@@ -84,11 +75,32 @@ function PlaneInstance({ direction, altitude }: PlaneInstanceProps) {
 }
 
 export default function PlaneFlyover() {
+  const planes = useMemo(() => [
+    {
+      startX: -250,
+      endX: 500,
+      y: 15,
+      z: -25,
+      speed: 20,
+      scale: 1.5,
+      rotationY: Math.PI,
+    },
+  ], []);
+
   return (
     <group>
-      <PlaneInstance direction="left-to-right" altitude="top" />
-      
-      <PlaneInstance direction="right-to-left" altitude="bottom" />
+      {planes.map((plane, index) => (
+        <PlaneInstance
+          key={index}
+          startX={plane.startX}
+          endX={plane.endX}
+          y={plane.y}
+          z={plane.z}
+          speed={plane.speed}
+          scale={plane.scale}
+          rotationY={plane.rotationY}
+        />
+      ))}
     </group>
   );
 }

@@ -31,7 +31,7 @@ export default function CameraController({
 
   useEffect(() => {
     camera.position.copy(initialPosition);
-    camera.lookAt(0, 0, 0);
+    camera.lookAt(20, 0, 0);
     startTime.current = Date.now();
   }, []);
 
@@ -101,7 +101,7 @@ export default function CameraController({
         <OrbitControls
           ref={orbitControlsRef}
           target={[0, 0, 0]}
-          minDistance={45}
+          minDistance={50}
           maxDistance={120}
           minPolarAngle={Math.PI * 0.1}
           maxPolarAngle={Math.PI * 0.4}
@@ -113,7 +113,7 @@ export default function CameraController({
           enableRotate={true}
           dampingFactor={0.1}
           rotateSpeed={-0.5}
-          zoomSpeed={0.5}
+          zoomSpeed={0.3}
           enabled={transitionPhase === 'controls'}
         />
       )}

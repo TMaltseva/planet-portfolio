@@ -24,8 +24,8 @@ export default function NeonText({
       style={{ fontSize: `${sizePx}px`, fontWeight: weight, letterSpacing: `${letterSpacingPx}px` }}
     >
       {chars.map((ch, i) => {
-        const style: CSSProperties = {
-          ['--d' as any]: `${delayOffsetSec + i * 0.06}s`,
+        const style: CSSProperties & { '--d': string } = {
+          '--d': `${delayOffsetSec + i * 0.06}s`,
         };
         return (
           <span key={i} className="neon-char" style={style}>
