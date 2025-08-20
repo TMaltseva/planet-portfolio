@@ -13,6 +13,7 @@ import PlaneFlyover from './components/models/PlaneFlyover';
 import NeonText from './components/ui/NeonText';
 import PerLetter from './components/ui/PerLetter';
 import SceneContainer from './components/models/SceneContainer';
+import JellySprites from './components/models/JellySprites';
 import './App.css';
 
 export default function App() {
@@ -41,7 +42,7 @@ export default function App() {
         }}
         className="app-canvas"
       >
-        <ambientLight intensity={0.1} />
+        <ambientLight intensity={0.2} />
         <directionalLight 
           position={[50, 50, 25]} 
           intensity={0.5}
@@ -57,6 +58,7 @@ export default function App() {
         <Suspense fallback={null}>
           <SceneContainer>
             <CloudsBackground />
+            <JellySprites />
             <PlaneFlyover />
             <CityModel />
 
