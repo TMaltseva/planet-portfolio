@@ -1,8 +1,7 @@
-import { useRef, useState } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { useRef, useState, useMemo } from 'react';
+import { useFrame, useThree } from '@react-three/fiber';
 import type { ThreeEvent } from '@react-three/fiber';
-import { useGLTF } from '@react-three/drei';
-import { Group } from 'three';
+import { Group, TextureLoader, Sprite, SpriteMaterial, Vector3 } from 'three';
 import type { LocationMarkerProps } from '../../types';
 
 interface LocationFigureProps extends LocationMarkerProps {
@@ -15,12 +14,33 @@ export default function LocationFigure({
   onClick 
 }: LocationFigureProps) {
   const figureRef = useRef<Group>(null);
-  const { scene } = useGLTF('/models/location.gltf');
+  const { camera } = useThree();
   const [isHovered, setIsHovered] = useState(false);
   const hoverTimeoutRef = useRef<number | null>(null);
 
+  const sprite = useMemo(() => {
+    const loader = new TextureLoader();
+    const texture = loader.load('/src/assets/point.png');
+    texture.premultiplyAlpha = true;
+    
+    const material = new SpriteMaterial({ 
+      map: texture, 
+      transparent: true,
+      alphaTest: 0.1,
+      color: 0xffc0cb,
+      depthTest: true,
+      depthWrite: false
+    });
+    
+    const spriteObject = new Sprite(material);
+    spriteObject.scale.setScalar(2.0);
+    spriteObject.position.set(0, 0.8, 0);
+    
+    return spriteObject;
+  }, []);
+
   useFrame((state) => {
-    if (figureRef.current) {
+    if (figureRef.current && sprite) {
       const baseY = point.position[1];
       const amplitude = 0.3;
       const speed = isActive ? 2 : 1.5;
@@ -34,6 +54,23 @@ export default function LocationFigure({
       const currentScale = figureRef.current.scale.x;
       const newScale = currentScale + (targetScale - currentScale) * 0.05;
       figureRef.current.scale.setScalar(newScale);
+
+      sprite.scale.set(3.0 * newScale, 2.0 * newScale, 1.0);
+
+      const worldPosition = new Vector3();
+      figureRef.current.getWorldPosition(worldPosition);
+      const distanceToCamera = camera.position.distanceTo(worldPosition);
+      
+      const focusDistance = 60;
+      const maxBlurDistance = 120;
+      
+      let opacity = 1.0;
+      if (distanceToCamera > focusDistance) {
+        const blurFactor = Math.min((distanceToCamera - focusDistance) / (maxBlurDistance - focusDistance), 1.0);
+        opacity = Math.max(1.0 - blurFactor * 0.7, 0.3);
+      }
+      
+      sprite.material.opacity = opacity;
     }
   });
 
@@ -76,10 +113,7 @@ export default function LocationFigure({
         <meshBasicMaterial transparent opacity={0} depthWrite={false} />
       </mesh>
 
-      <primitive 
-        object={scene.clone()} 
-        scale={1.0}
-      />
+      <primitive object={sprite} />
       
       <mesh position={[0, -0.5, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[0.5, 0.8, 16]} />
@@ -87,6 +121,7 @@ export default function LocationFigure({
           color={point.color} 
           transparent 
           opacity={(isActive || isHovered) ? 0.6 : 0.3}
+          depthWrite={false}
         />
       </mesh>
       
@@ -101,6 +136,3 @@ export default function LocationFigure({
     </group>
   );
 }
-
-useGLTF.preload('/models/location.gltf');
-

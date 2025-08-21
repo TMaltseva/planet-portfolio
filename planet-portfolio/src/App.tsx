@@ -10,10 +10,13 @@ import { useTour } from './hooks/useTour';
 import { TOUR_POINTS } from './data/tourPoints';
 import CameraController from './components/tour/CameraController';
 import PlaneFlyover from './components/models/PlaneFlyover';
-import NeonText from './components/ui/NeonText';
-import PerLetter from './components/ui/PerLetter';
+import Modal from './components/ui/Modal';
 import SceneContainer from './components/models/SceneContainer';
 import JellySprites from './components/models/JellySprites';
+import jellyHeaderImage from '../src/assets/jelly-header.png';
+import NeonText from './components/ui/NeonText';
+import PerLetter from './components/ui/PerLetter';
+
 import './App.css';
 
 export default function App() {
@@ -29,6 +32,11 @@ export default function App() {
 
     const [introComplete, setIntroComplete] = useState(false);
     const [orbitControlsReady, setOrbitControlsReady] = useState(false);
+    const [showHeaderText, setShowHeaderText] = useState(false);
+
+    const handleHeaderClick = () => {
+      setShowHeaderText(!showHeaderText);
+    };
 
   return (
     <div className="app-container">
@@ -45,7 +53,7 @@ export default function App() {
         <ambientLight intensity={0.2} />
         <directionalLight 
           position={[50, 50, 25]} 
-          intensity={0.5}
+          intensity={0.7}
           castShadow
           shadow-mapSize-width={2048}
           shadow-mapSize-height={2048}
@@ -92,75 +100,37 @@ export default function App() {
       {/* Header */}
       <div className="header">
         <div className="header__panel frosted-panel">
-          <div className="header__greeting">
-            <NeonText text={"Hello,"} sizePx={80} weight={800} letterSpacingPx={1} />
-          </div>
-          <div className="header__name">
-            <PerLetter text={"I'm Tommy!"} />
-          </div>
-          <p className="header__title">
-            Frontend Developer
-          </p>
-          <p className="header__title--no-margin">
-            & 3D Enthusiast
-          </p>
-          <p className="header__subtitle">
-            Click on the city locations to explore my portfolio
-          </p>
+          {showHeaderText ? (
+            <div className="header__text-content" onClick={handleHeaderClick} style={{ cursor: 'pointer' }}>
+              <div className="header__title">
+                <NeonText text={"Frontend Dev"} sizePx={50} weight={700} letterSpacingPx={1} />
+              </div>
+              <div className="header__title--no-margin">
+                <PerLetter text={"& 3D Enthusiast"} />
+              </div>
+              <p className="header__subtitle">
+                Click on the city locations to explore my portfolio
+              </p>
+            </div>
+          ) : (
+            <div className="header__image">
+              <img 
+                src="/src/assets/jelly-header.png" 
+                alt="Hello, I'm Tommy!" 
+                className="header__jelly-image"
+                onClick={handleHeaderClick}
+              />
+            </div>
+          )}
         </div>
       </div>
 
       {/* Modal */}
-      {showModal && selectedPoint && (
-        <div 
-          className="modal-overlay"
-          onClick={closeModal}
-          style={{
-            '--color-40': `${selectedPoint.color}40`,
-            '--color-20': `${selectedPoint.color}20`, 
-            '--color-00': `${selectedPoint.color}00`
-          } as React.CSSProperties}
-        >
-          <div 
-            className="modal-content"
-            style={{ border: `3px solid ${selectedPoint.color}` }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2 
-              className="modal__title"
-              style={{ color: selectedPoint.color }}
-            >
-              {selectedPoint.title}
-            </h2>
-            <p className="modal__description">
-              {selectedPoint.description}
-            </p>
-            
-            <div className="modal__details">
-              {selectedPoint.id === 'about' && (
-                <div>
-                  <p><strong>Опыт:</strong> 2+ года в разработке</p>
-                  <p><strong>Специализация:</strong> Frontend разработка</p>
-                </div>
-              )}
-              {selectedPoint.id === 'skills' && (
-                <div>
-                  <p><strong>Frontend:</strong> React, TypeScript, Three.js</p>
-                  <p><strong>Backend:</strong> Node.js, PostgreSQL</p>
-                </div>
-              )}
-            </div>
-            
-            <button
-              className="modal__button"
-              style={{ backgroundColor: selectedPoint.color }}
-              onClick={closeModal}
-            >
-              Continue journey
-            </button>
-          </div>
-        </div>
-      )}
+      <Modal 
+        showModal={showModal}
+        selectedPoint={selectedPoint}
+        onClose={closeModal}
+      />
     </div>
   );
 }

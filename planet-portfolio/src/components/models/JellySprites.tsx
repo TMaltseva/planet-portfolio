@@ -21,21 +21,25 @@ function useJellyAssets() {
 export default function JellySprites() {
   const groupRef = useRef<Group>(null);
   const loaderRef = useRef(new TextureLoader());
-
+  
   const urls = useJellyAssets();
 
   const jellies: JellySpec[] = useMemo(() => {
-    return urls.map((url, idx) => ({
-      textureUrl: url,
-      baseScale: MathUtils.lerp(3.0, 6.0, Math.random()),
-      speed: 0,
-      x: MathUtils.randFloat(-200, 200),
-      y: MathUtils.randFloat(8, 25),
-      z: MathUtils.randFloat(-150, 50),
-      phase: Math.random() * Math.PI * 2,
-      opacity: MathUtils.randFloat(0.9, 1),
-    }));
-  }, [urls]);
+    return urls.map((url, index) => {
+      const seed = index * 12345;
+      
+      return {
+        textureUrl: url,
+        baseScale: MathUtils.lerp(6.0, 12.0, (Math.sin(seed) + 1) / 2),
+        speed: 0,
+        x: MathUtils.lerp(-400, 350, (Math.sin(seed * 1.1) + 1) / 2),
+        y: MathUtils.lerp(-10, 35, (Math.sin(seed * 1.3) + 1) / 2),
+        z: MathUtils.lerp(-120, -40, (Math.sin(seed * 1.7) + 1) / 2),
+        phase: ((Math.sin(seed * 2.1) + 1) / 2) * Math.PI * 2,
+        opacity: MathUtils.lerp(0.9, 1, (Math.sin(seed * 3.3) + 1) / 2),
+      };
+    });
+  }, [urls.length]);
 
   const sprites = useMemo(() => {
     return jellies.map((jelly) => {
@@ -52,6 +56,15 @@ export default function JellySprites() {
       const sprite = new Sprite(material);
       sprite.scale.setScalar(jelly.baseScale);
       sprite.position.set(jelly.x, jelly.y, jelly.z);
+      
+      sprite.userData = {
+        baseX: jelly.x,
+        baseY: jelly.y,
+        baseZ: jelly.z,
+        baseScale: jelly.baseScale,
+        phase: jelly.phase
+      };
+      
       return sprite;
     });
   }, [jellies]);
@@ -65,21 +78,22 @@ export default function JellySprites() {
     };
   }, [sprites]);
 
-  useFrame((state, delta) => {
-    sprites.forEach((sprite, idx) => {
-      const spec = jellies[idx];
-      const t = state.clock.elapsedTime + spec.phase;
+  useFrame((state) => {
+    sprites.forEach((sprite) => {
+      const userData = sprite.userData;
+      const t = state.clock.elapsedTime + userData.phase;
       
       const pulse = 1 + Math.sin(t * 1.5) * 0.1;
-      sprite.scale.setScalar(spec.baseScale * pulse);
+      sprite.scale.setScalar(userData.baseScale * pulse);
       
       const sway = Math.sin(t * 0.8) * 0.5;
       const bob = Math.cos(t * 1.2) * 0.3;
+      const drift = Math.sin(t * 0.5) * 0.2;
       
       sprite.position.set(
-        spec.x + sway,
-        spec.y + bob,
-        spec.z + Math.sin(t * 0.5) * 0.2
+        userData.baseX + sway,
+        userData.baseY + bob,
+        userData.baseZ + drift
       );
       
       sprite.material.rotation = Math.sin(t * 0.3) * 0.1;
