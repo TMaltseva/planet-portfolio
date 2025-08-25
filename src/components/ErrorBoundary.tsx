@@ -40,6 +40,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
     if (this.state.hasError) {
       return (
         <div style={{
+          color: 'black',
           padding: '20px',
           textAlign: 'center',
           backgroundColor: '#f8f8f8',
