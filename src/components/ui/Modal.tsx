@@ -1,0 +1,228 @@
+import React, { useState, useMemo } from 'react';
+import type { TourPoint } from '../../types';
+import { useJellyAssets } from '../../hooks/useJellyAssets';
+import { getRandomJellyElements } from '../../utils/getRandomJellyElements';
+
+interface ModalProps {
+  showModal: boolean;
+  selectedPoint: TourPoint | null;
+  onClose: () => void;
+}
+
+const headerImages: Record<string, string> = {
+//   about: '/src/assets/about.png',
+//   skills: '/src/assets/skills.png', 
+//   projects: '/src/assets/projects.png',
+//   certificates: '/src/assets/study.png',
+//   contact: '/src/assets/contacts.png',
+};
+
+export default function Modal({ showModal, selectedPoint, onClose }: ModalProps) {
+    const [imageLoaded, setImageLoaded] = useState(false);
+    const [imageError, setImageError] = useState(false);
+    
+    const jellyAssets = useJellyAssets();
+    
+    const randomJellies = useMemo(() => {
+      if (!selectedPoint) return [];
+      return getRandomJellyElements(jellyAssets, 2);
+    }, [selectedPoint?.id, jellyAssets]);
+  
+    if (!showModal || !selectedPoint) return null;
+  
+    const headerImageSrc = headerImages[selectedPoint.id];
+  
+    const handleImageLoad = () => {
+      setImageLoaded(true);
+      setImageError(false);
+    };
+  
+    const handleImageError = () => {
+      setImageError(true);
+      setImageLoaded(false);
+    };
+  
+    return (
+      <div 
+        className="modal-overlay"
+        onClick={onClose}
+        style={{
+          '--color-40': `${selectedPoint.color}40`,
+          '--color-20': `${selectedPoint.color}20`, 
+          '--color-00': `${selectedPoint.color}00`
+        } as React.CSSProperties}
+      >
+        <div 
+          className="modal-content"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {randomJellies.map((jellySrc, index) => (
+            <div
+              key={`${selectedPoint.id}-jelly-${index}`}
+              className={`modal-jelly-decoration modal-jelly-${index === 0 ? 'left' : 'right'}`}
+            >
+              <img 
+                src={jellySrc} 
+                alt="decoration" 
+                className="modal-jelly-image"
+              />
+            </div>
+          ))}
+
+          {headerImageSrc && !imageError ? (
+            <div className="modal__header-image">
+              <img 
+                src={headerImageSrc} 
+                alt={selectedPoint.title}
+                className="modal__title-image"
+                onLoad={handleImageLoad}
+                onError={handleImageError}
+                style={{
+                  width: '280px',
+                  height: 'auto',
+                  maxWidth: '90%',
+                  objectFit: 'contain',
+                  marginBottom: '20px',
+                  filter: `drop-shadow(2px 2px 8px ${selectedPoint.color}40)`,
+                  display: imageLoaded ? 'block' : 'none',
+                }}
+              />
+              {!imageLoaded && !imageError && (
+                <div 
+                  style={{
+                    width: '280px',
+                    height: '80px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: '#f0f0f0',
+                    borderRadius: '10px',
+                    marginBottom: '20px',
+                    color: '#666',
+                  }}
+                >
+                  Loading...
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="modal__neon-title">
+              <div className="neon-line neon-once">
+                {Array.from(selectedPoint.title).map((char, index) => (
+                  <span 
+                    key={index} 
+                    className="neon-char neon-once" 
+                    style={{ 
+                      '--d': `${index * 0.06}s`,
+                      fontWeight: 800,
+                    } as React.CSSProperties & { '--d': string }}
+                  >
+                    {char === ' ' ? '\u00A0' : char}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+          
+          <div className="modal__details">
+            {selectedPoint.id === 'about' && (
+              <div>
+                <p><strong>Experience:</strong> 2+ years</p>
+                <p> — </p>
+                <p><strong>Specialization:</strong> Frontend and creative dev</p>
+                <p> — </p>
+                <p>I'm interested in creative systems building/mastering a 2D/3D engine. My passion is good design and high functionality of the surrounding space.</p>
+              </div>
+            )}
+            {selectedPoint.id === 'skills' && (
+              <div>
+                <p><strong>Frontend:</strong> React, TypeScript, MobX, Jenkins, Storybook, Three.js, Phazer</p>
+                <p> — </p>
+                <p><strong>Backend:</strong> Node.js, PostgreSQL</p>
+              </div>
+            )}
+            {selectedPoint.id === 'projects' && (
+              
+            <div className="projects-section">
+                <div className="projects-grid">
+                    <a href="https://tmaltseva.github.io/progress-component/" target="_blank" rel="noopener noreferrer" className="project-link">
+                    Progress Component
+                    </a>
+                    <a href="https://tmaltseva.github.io/rick-and-morty-app/" target="_blank" rel="noopener noreferrer" className="project-link">
+                    Rick and Morty app
+                    </a>
+                    <a href="https://tmaltseva.github.io/routing-table/" target="_blank" rel="noopener noreferrer" className="project-link">
+                    Routing Table Manager
+                    </a>
+                    <a href="https://tmaltseva.github.io/breathing-meditation-3d/" target="_blank" rel="noopener noreferrer" className="project-link">
+                    Meditation Breathing
+                    </a>
+                    <a href="https://tmaltseva.github.io/todo-app/" target="_blank" rel="noopener noreferrer" className="project-link">
+                    ToDo App
+                    </a>
+                    <a href="https://rolling-scopes-school.github.io/tmaltseva-JSFE2024Q4/news-api/" target="_blank" rel="noopener noreferrer" className="project-link">
+                    News API
+                    </a>
+                    <a href="https://rolling-scopes-school.github.io/tmaltseva-JSFE2024Q4/decision-making-tool/" target="_blank" rel="noopener noreferrer" className="project-link">
+                    Decision Making Tool
+                    </a>
+                    <a href="https://rolling-scopes-school.github.io/tmaltseva-JSFE2024Q4/fun-chat/" target="_blank" rel="noopener noreferrer" className="project-link">
+                    Fun Chat
+                    </a>
+                    <a href="https://rolling-scopes-school.github.io/tmaltseva-JSFE2024Q4/simon-says/" target="_blank" rel="noopener noreferrer" className="project-link">
+                    Simon-says
+                    </a>
+                    <a href="https://rolling-scopes-school.github.io/tmaltseva-JSFE2024Q4/nonograms/" target="_blank" rel="noopener noreferrer" className="project-link">
+                    Nonograms
+                    </a>
+                </div>
+            </div>
+            )}
+            {selectedPoint.id === 'certificates' && (
+            <div className="certificates-section">
+              <div className="certificates-grid">
+                <a href="https://app.rs.school/certificate/lgyer7oe" target="_blank" rel="noopener noreferrer" className="contact-link">
+                  JS/FE PRE-SCHOOL
+                </a>
+                <a href="https://app.rs.school/certificate/5e6oztda" target="_blank" rel="noopener noreferrer" className="contact-link">
+                  JAVASCRIPT/FRONT-END
+                </a>
+              </div>
+            </div>
+            )}
+            {selectedPoint.id === 'contact' && (
+              <div>
+                <p>
+                <a 
+                      href="mailto:bacardeonie@gmail.com" 
+                      className="contact-link"
+                    >
+                        <strong>My email</strong> 
+                    </a>
+                </p>
+                <p> — </p>
+                <p>
+                    <a href="https://github.com/TMaltseva" target="_blank" rel="noopener noreferrer" className="contact-link">
+                        <strong>My GitHub</strong> 
+                    </a>
+                </p>
+                <p> — </p>
+                <p>
+                    <a href="https://linkedin.com/in/tamara-maltseva-364292179" target="_blank" rel="noopener noreferrer" className="contact-link">
+                    <strong>My LinkedIn</strong> 
+                    </a>
+                </p>
+            </div>
+            )}
+          </div>
+          
+          <button
+            className="modal__button"
+            onClick={onClose}
+          >
+            Continue
+          </button>
+        </div>
+      </div>
+    );
+}

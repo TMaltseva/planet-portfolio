@@ -1,0 +1,8 @@
+@import './styles/Base.module.css';
+@import './styles/Header.module.css';
+@import './styles/Modal.module.css';
+@import './styles/Controls.module.css';
+@import './styles/Projects.module.css';
+@import './styles/Tooltip.module.css';
+@import './styles/Animations.module.css';
+@import './styles/ScreenLoader.module.css';

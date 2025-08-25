@@ -1,0 +1,32 @@
+.controls-panel {
+  font-family: Arial, sans-serif;
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  color: white;
+  font-size: 16px;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  border-radius: 10px;
+  max-width: 200px;
+  animation: slideInFromRight 0.8s ease-out;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.controls-panel__title {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

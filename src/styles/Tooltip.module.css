@@ -1,0 +1,78 @@
+.location-tooltip {
+  position: relative;
+  pointer-events: none;
+  -webkit-user-select: none;
+  user-select: none;
+  z-index: 1000;
+}
+
+.tooltip-neon-text {
+  display: inline-flex;
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.8));
+}
+
+.tooltip-neon-char {
+  position: relative;
+  display: inline-block;
+  color: #ffffff;
+  text-shadow:
+    0 0 3px #fff3b0,
+    0 0 12px rgba(255, 218, 67, 0.95),
+    0 0 25px rgba(255, 153, 0, 0.8),
+    0 0 35px rgba(255, 136, 0, 0.6);
+}
+
+.tooltip-neon-char:nth-child(3n+1) {
+  color: #eaffff;
+  text-shadow:
+    0 0 10px #d1fdfe,
+    0 0 8px rgba(96, 246, 255, 0.85),
+    0 0 18px rgba(0, 204, 255, 0.95);
+}
+
+.tooltip-neon-char:nth-child(3n+2) {
+  color: #ffe8f7;
+  text-shadow:
+    0 0 10px #ffd4f0,
+    0 0 8px rgba(255, 102, 204, 0.6),
+    0 0 18px rgba(255, 51, 153, 0.45);
+}
+
+.tooltip-neon-char:nth-child(3n+3) {
+  color: #fffbf1;
+  text-shadow:
+    0 0 10px #ffe9a6,
+    0 0 8px rgba(255, 201, 71, 0.55),
+    0 0 18px rgba(255, 136, 0, 0.55);
+}
+
+.location-tooltip {
+  animation: tooltipFadeIn 0.3s ease-out forwards;
+}
+
+@keyframes tooltipFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  .tooltip-neon-text {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tooltip-neon-text {
+    font-size: 20px;
+  }
+}

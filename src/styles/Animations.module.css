@@ -1,0 +1,26 @@
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 var(--color-40);
+  }
+  50% {
+    box-shadow: 0 0 0 10px var(--color-20);
+  }
+  100% {
+    box-shadow: 0 0 0 20px var(--color-00);
+  }
+}
+
+@keyframes pulseScale {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
