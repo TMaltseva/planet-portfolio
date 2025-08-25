@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from 'react';
-import { TextureLoader, Group, Sprite, SpriteMaterial, Vector3, MathUtils } from 'three';
+import { TextureLoader, Group, Sprite, SpriteMaterial, MathUtils } from 'three';
 import { useFrame } from '@react-three/fiber';
 import { useJellyAssets } from '../../hooks/useJellyAssets';
 

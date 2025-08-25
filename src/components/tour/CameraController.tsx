@@ -47,7 +47,7 @@ export default function CameraController({
     }
   }, [allowOrbitControls, onOrbitControlsReady]);
 
-  useFrame((state, delta) => {
+  useFrame((_state, delta) => {
     if (!startTime.current) return;
 
     const elapsed = Date.now() - startTime.current;

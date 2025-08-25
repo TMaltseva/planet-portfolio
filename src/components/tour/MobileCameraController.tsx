@@ -56,7 +56,7 @@ export default function MobileCameraController({
     }
   }, [allowOrbitControls, onOrbitControlsReady]);
 
-  useFrame((state, delta) => {
+  useFrame((_state, delta) => {
     if (!startTime.current) return;
 
     const elapsed = Date.now() - startTime.current;

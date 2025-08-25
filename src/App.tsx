@@ -1,5 +1,4 @@
 import { Canvas } from '@react-three/fiber';
-import { useGLTF } from '@react-three/drei';
 import { useState } from 'react';
 import { Environment } from '@react-three/drei';
 import { Suspense } from 'react';
@@ -28,12 +27,11 @@ export default function App() {
       currentPoint,
       showModal,
       selectedPoint,
-      handleNextPoint,
       handlePointClick,
       closeModal
     } = useTour(TOUR_POINTS);
 
-    const [introComplete, setIntroComplete] = useState(false);
+    const [_introComplete, setIntroComplete] = useState(false);
     const [orbitControlsReady, setOrbitControlsReady] = useState(false);
     const { isMobile } = useResponsive();
 
