@@ -25,7 +25,7 @@ export default function LocationFigure({
 
   const sprite = useMemo(() => {
     const loader = new TextureLoader();
-    const texture = loader.load('/src/assets/point.png');
+    const texture = loader.load('point.png');
     texture.premultiplyAlpha = true;
     
     const material = new SpriteMaterial({ 
