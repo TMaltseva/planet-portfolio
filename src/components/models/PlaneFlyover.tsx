@@ -17,7 +17,7 @@ interface PlaneInstanceProps {
 function PlaneInstance({ startX, endX, y, z, speed, scale, rotationY }: PlaneInstanceProps) {
   const planeRef = useRef<Group>(null);
   const progressRef = useRef<number>(0);
-  const { scene } = useGLTF('/models/plane.gltf');
+  const { scene } = useGLTF('models/plane.gltf');
   const glowMatRef = useRef<THREE.MeshBasicMaterial>(null);
   const tintAppliedRef = useRef<boolean>(false);
 

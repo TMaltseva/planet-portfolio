@@ -7,7 +7,7 @@ interface CityModelProps {
 }
 
 export default function CityModel ({ isMobile = false }: CityModelProps) {
-  const { scene } = useGLTF('/models/scene.gltf');
+  const { scene } = useGLTF('models/scene.gltf');
   const cityRef = useRef<Group>(null);
 
   const position = isMobile ? [0, -10, 0] : [20, 5, 0];

@@ -6,7 +6,7 @@ import type { CloudInstanceProps } from '../../types';
 
 export default function CloudInstance({ position, scale, rotationSpeed, floatSpeed }: CloudInstanceProps) {
   const cloudRef = useRef<Group>(null);
-  const { scene } = useGLTF('/models/cloud.gltf');
+  const { scene } = useGLTF('models/cloud.gltf');
   const { camera } = useThree();
 
   useEffect(() => {
