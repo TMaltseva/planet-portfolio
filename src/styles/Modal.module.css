@@ -279,6 +279,7 @@
 }
 
 .modal-jelly-decoration {
+  transition: opacity 0.3s ease;
   position: absolute;
   pointer-events: none;
   z-index: 1;

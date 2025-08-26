@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import type { TourPoint } from '../../types';
 import { useJellyAssets } from '../../hooks/useJellyAssets';
 import { getRandomJellyElements } from '../../utils/getRandomJellyElements';
@@ -20,16 +20,34 @@ const headerImages: Record<string, string> = {
 export default function Modal({ showModal, selectedPoint, onClose }: ModalProps) {
     const [imageLoaded, setImageLoaded] = useState(false);
     const [imageError, setImageError] = useState(false);
-    
+    const [jellyLoaded, setJellyLoaded] = useState<Record<string, boolean>>({});
+
     const jellyAssets = useJellyAssets();
     
+    const stableJellyAssets = useMemo(() => jellyAssets, [jellyAssets.length]);
+
     const randomJellies = useMemo(() => {
       if (!selectedPoint) return [];
-      return getRandomJellyElements(jellyAssets, 2);
-    }, [selectedPoint?.id, jellyAssets]);
+      return getRandomJellyElements(stableJellyAssets, 2);
+    }, [selectedPoint?.id, stableJellyAssets]);
+
+    useEffect(() => {
+      if (showModal && randomJellies.length > 0) {
+        randomJellies.forEach(src => {
+          const img = new Image();
+          img.src = src;
+        });
+      }
+    }, [showModal, randomJellies]);
   
+    useEffect(() => {
+      if (showModal) {
+        setJellyLoaded({});
+      }
+    }, [selectedPoint?.id]);
+    
     if (!showModal || !selectedPoint) return null;
-  
+
     const headerImageSrc = headerImages[selectedPoint.id];
   
     const handleImageLoad = () => {
@@ -60,11 +78,22 @@ export default function Modal({ showModal, selectedPoint, onClose }: ModalProps)
             <div
               key={`${selectedPoint.id}-jelly-${index}`}
               className={`modal-jelly-decoration modal-jelly-${index === 0 ? 'left' : 'right'}`}
+              style={{ opacity: jellyLoaded[jellySrc] ? 1 : 0 }}
             >
               <img 
                 src={jellySrc} 
                 alt="decoration" 
                 className="modal-jelly-image"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  const parent = target.parentElement;
+                  if (parent) {
+                    parent.style.display = 'none';
+                  }
+                }}
+                onLoad={(e) => {
+                  setJellyLoaded(prev => ({...prev, [jellySrc]: true}));
+                }}
               />
             </div>
           ))}
@@ -193,7 +222,7 @@ export default function Modal({ showModal, selectedPoint, onClose }: ModalProps)
             {selectedPoint.id === 'contact' && (
               <div>
                 <p>
-                <a 
+                    <a 
                       href="mailto:bacardeonie@gmail.com" 
                       className="contact-link"
                     >
