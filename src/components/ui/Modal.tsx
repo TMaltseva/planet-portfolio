@@ -45,7 +45,7 @@ export default function Modal({ showModal, selectedPoint, onClose }: ModalProps)
         setJellyLoaded({});
       }
     }, [selectedPoint?.id]);
-    
+
     if (!showModal || !selectedPoint) return null;
 
     const headerImageSrc = headerImages[selectedPoint.id];
@@ -91,7 +91,7 @@ export default function Modal({ showModal, selectedPoint, onClose }: ModalProps)
                     parent.style.display = 'none';
                   }
                 }}
-                onLoad={(e) => {
+                onLoad={() => {
                   setJellyLoaded(prev => ({...prev, [jellySrc]: true}));
                 }}
               />
