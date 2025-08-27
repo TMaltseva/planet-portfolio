@@ -3,6 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 import { Group } from 'three';
 import * as THREE from 'three';
+import { useModalContext } from '../../contexts/ModalContext';
 
 interface PlaneInstanceProps {
   startX: number;
@@ -20,8 +21,11 @@ function PlaneInstance({ startX, endX, y, z, speed, scale, rotationY }: PlaneIns
   const { scene } = useGLTF('models/plane.gltf');
   const glowMatRef = useRef<THREE.MeshBasicMaterial>(null);
   const tintAppliedRef = useRef<boolean>(false);
+  const { showModal } = useModalContext();
 
   useFrame((state, delta) => {
+    if (showModal) return;
+    
     if (!planeRef.current) return;
 
     if (!tintAppliedRef.current) {

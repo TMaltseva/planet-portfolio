@@ -9,7 +9,7 @@
   background: rgba(0, 0, 0, 0.1);
   padding: 15px;
   border-radius: 10px;
-  max-width: 200px;
+  max-width: 250px;
   animation: slideInFromRight 0.8s ease-out;
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);

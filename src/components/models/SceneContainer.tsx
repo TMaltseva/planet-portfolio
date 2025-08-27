@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { Group, Vector2 } from 'three';
+import { useModalContext } from '../../contexts/ModalContext';
 
 interface SceneContainerProps {
   children: React.ReactNode;
@@ -10,6 +11,7 @@ interface SceneContainerProps {
 export default function SceneContainer({ children, isMobile = false }: SceneContainerProps) {
   const sceneRef = useRef<Group>(null);
   const { gl } = useThree();
+  const { showModal } = useModalContext();
   
   const cityCenter = isMobile ? { x: 0, z: 0 } : { x: 20, z: 0 };
   
@@ -58,6 +60,8 @@ export default function SceneContainer({ children, isMobile = false }: SceneCont
   };
 
   useFrame(() => {
+    if (showModal) return;
+    
     if (!sceneRef.current) return;
     
     if (!isRotating) {

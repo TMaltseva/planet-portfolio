@@ -1,4 +1,4 @@
-import { useRef, useState, useMemo } from 'react';
+import { useRef, useState, useMemo, useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import type { ThreeEvent } from '@react-three/fiber';
 import { Group, TextureLoader, Sprite, SpriteMaterial, Vector3 } from 'three';
@@ -6,6 +6,7 @@ import type { LocationMarkerProps } from '../../types';
 import { Html } from '@react-three/drei';
 import { useAdaptivePosition } from '../../hooks/useAdaptivePosition';
 import { useResponsive } from '../../hooks/useResponsive';
+import { useModalContext } from '../../contexts/ModalContext';
 
 interface LocationFigureProps extends LocationMarkerProps {
   onClick: () => void;
@@ -19,8 +20,11 @@ export default function LocationFigure({
   const figureRef = useRef<Group>(null);
   const { camera } = useThree();
   const [isHovered, setIsHovered] = useState(false);
+  const [isTouched, setIsTouched] = useState(false);
   const hoverTimeoutRef = useRef<number | null>(null);
+  const touchTimeoutRef = useRef<number | null>(null);
   const { isMobile } = useResponsive();
+  const { showModal } = useModalContext();
   const adaptivePosition = useAdaptivePosition(point, isMobile);
 
   const sprite = useMemo(() => {
@@ -45,6 +49,8 @@ export default function LocationFigure({
   }, []);
 
   useFrame((state) => {
+    if (showModal) return;
+    
     if (figureRef.current && sprite) {
       const baseY = adaptivePosition[1];
       const amplitude = 0.3;
@@ -105,6 +111,43 @@ export default function LocationFigure({
     }, 80);
   };
 
+  const handlePointerDown = (event: ThreeEvent<PointerEvent>) => {
+    if (isMobile) {
+      event.stopPropagation();
+      
+      if (hoverTimeoutRef.current !== null) {
+        window.clearTimeout(hoverTimeoutRef.current);
+        hoverTimeoutRef.current = null;
+      }
+      
+      if (touchTimeoutRef.current !== null) {
+        window.clearTimeout(touchTimeoutRef.current);
+        touchTimeoutRef.current = null;
+      }
+      
+      setIsTouched(true);
+      
+      touchTimeoutRef.current = window.setTimeout(() => {
+        setIsTouched(false);
+        touchTimeoutRef.current = null;
+      }, 3000);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current !== null) {
+        window.clearTimeout(hoverTimeoutRef.current);
+      }
+      if (touchTimeoutRef.current !== null) {
+        window.clearTimeout(touchTimeoutRef.current);
+      }
+    };
+  }, []);
+  
+
+  const shouldShowLabel = (isHovered || (isMobile && isTouched)) && !showModal;
+
   return (
     <group 
       ref={figureRef} 
@@ -112,8 +155,13 @@ export default function LocationFigure({
       onClick={handleClick}
       onPointerOver={handlePointerOver}
       onPointerOut={handlePointerOut}
+      onPointerDown={handlePointerDown}
     >
-      <mesh onPointerOver={handlePointerOver} onPointerOut={handlePointerOut}>
+      <mesh 
+        onPointerOver={handlePointerOver} 
+        onPointerOut={handlePointerOut}
+        onPointerDown={handlePointerDown}
+      >
         <sphereGeometry args={[1.25, 16, 16]} />
         <meshBasicMaterial transparent opacity={0} depthWrite={false} />
       </mesh>
@@ -130,7 +178,7 @@ export default function LocationFigure({
         />
       </mesh>
 
-      {isHovered && (
+      {shouldShowLabel && (
         <Html
           position={[0, 4, 0]}
           center

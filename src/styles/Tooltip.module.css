@@ -3,7 +3,7 @@
   pointer-events: none;
   -webkit-user-select: none;
   user-select: none;
-  z-index: 1000;
+  z-index: 100;
 }
 
 .tooltip-neon-text {

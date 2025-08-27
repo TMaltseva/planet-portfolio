@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import { TextureLoader, Group, Sprite, SpriteMaterial, MathUtils } from 'three';
 import { useFrame } from '@react-three/fiber';
 import { useJellyAssets } from '../../hooks/useJellyAssets';
+import { useModalContext } from '../../contexts/ModalContext';
 
 interface JellySpec {
   textureUrl: string;
@@ -17,6 +18,7 @@ interface JellySpec {
 export default function JellySprites() {
   const groupRef = useRef<Group>(null);
   const loaderRef = useRef(new TextureLoader());
+  const { showModal } = useModalContext();
   
   const urls = useJellyAssets();
 
@@ -75,6 +77,8 @@ export default function JellySprites() {
   }, [sprites]);
 
   useFrame((state) => {
+    if (showModal) return;
+    
     sprites.forEach((sprite) => {
       const userData = sprite.userData;
       const t = state.clock.elapsedTime + userData.phase;

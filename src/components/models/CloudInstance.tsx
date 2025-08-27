@@ -3,11 +3,13 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 import { Group, Mesh, MeshStandardMaterial, MeshBasicMaterial, Vector3 } from 'three';
 import type { CloudInstanceProps } from '../../types';
+import { useModalContext } from '../../contexts/ModalContext';
 
 export default function CloudInstance({ position, scale, rotationSpeed, floatSpeed }: CloudInstanceProps) {
   const cloudRef = useRef<Group>(null);
   const { scene } = useGLTF('models/cloud.gltf');
   const { camera } = useThree();
+  const { showModal } = useModalContext();
 
   useEffect(() => {
     if (cloudRef.current) {
@@ -40,6 +42,8 @@ export default function CloudInstance({ position, scale, rotationSpeed, floatSpe
   }, []);
 
   useFrame((state) => {
+    if (showModal) return;
+    
     if (cloudRef.current) {
       cloudRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * floatSpeed) * 2;
       cloudRef.current.position.x = position[0] + Math.cos(state.clock.elapsedTime * floatSpeed * 0.5) * 1;
