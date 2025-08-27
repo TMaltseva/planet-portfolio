@@ -22,7 +22,7 @@ export default function Modal({ showModal, selectedPoint, onClose }: ModalProps)
     const [imageLoaded, setImageLoaded] = useState(false);
     const [imageError, setImageError] = useState(false);
     const [jellyLoaded, setJellyLoaded] = useState<Record<string, boolean>>({});
-    const [_performanceStats, setPerformanceStats] = useState<{ avgFps: string; avgGpuLoad: string; samples: number } | null>(null);
+    const [_performanceStats, _setPerformanceStats] = useState<{ avgFps: string; avgGpuLoad: string; samples: number } | null>(null);
 
     const jellyAssets = useJellyAssets();
     
