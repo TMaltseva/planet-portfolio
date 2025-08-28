@@ -55,16 +55,16 @@ export function useDeviceCapabilities(): DeviceCapabilities {
         prefersReducedMotion,
       });
 
-      console.log("Device capabilities:", {
-        supportsWebGL: !!gl,
-        supportsWebGL2: !!gl2,
-        deviceMemory,
-        hardwareConcurrency,
-        maxTextureSize,
-        isLowEndDevice,
-        shouldReduceAnimations,
-        prefersReducedMotion,
-      });
+      //   console.log("Device capabilities:", {
+      //     supportsWebGL: !!gl,
+      //     supportsWebGL2: !!gl2,
+      //     deviceMemory,
+      //     hardwareConcurrency,
+      //     maxTextureSize,
+      //     isLowEndDevice,
+      //     shouldReduceAnimations,
+      //     prefersReducedMotion,
+      //   });
 
       canvas.remove();
     };
