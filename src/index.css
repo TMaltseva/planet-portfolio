@@ -8,13 +8,6 @@
   font-weight: 400;
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background: linear-gradient(180deg, 
-    #6d9bff 0%,
-    #8ba5ff 25%,
-    #b8c5ff 50%,
-    #e6b3ff 75%,
-    #ffc0cb 100%
-  );
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;

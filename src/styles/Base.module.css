@@ -4,22 +4,25 @@ html, body, #root {
   width: 100%;
   height: 100%;
   overflow-x: auto;
+  background: linear-gradient(180deg, 
+  #6d9bff 0%,
+  #8ba5ff 25%,
+  #b8c5ff 50%,
+  #e6b3ff 75%,
+  #ffc0cb 100%
+  );
+  background-attachment: scroll;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
 }
 
 .app-container {
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(180deg, 
-    rgba(255, 192, 203, 0.1) 0%, 
-    rgba(255, 182, 193, 0.05) 50%, 
-    rgba(255, 209, 220, 0.1) 100%);
   min-width: 360px;
   overflow-x: auto;
   position: relative;
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
 }
-
 
 @media (max-width: 767px) {
   .app-container {
@@ -33,9 +36,33 @@ html, body, #root {
 }
 
 @supports (-webkit-touch-callout: none) {
+  html, body, #root {
+    height: -webkit-fill-available;
+    min-height: -webkit-fill-available;
+    background-attachment: scroll;
+  }
+  
   .app-container {
     height: -webkit-fill-available;
     min-height: -webkit-fill-available;
+  }
+}
+
+@media (max-width: 767px) {
+  html, body, #root {
+    height: 100vh;
+    height: 100dvh;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background-size: 100% 100%;
+    background-position: top center;
+  }
+  
+  .app-container {
+    height: 100vh;
+    height: 100dvh;
+    min-height: 100vh;
+    min-height: 100dvh;
   }
 }
 
@@ -43,6 +70,7 @@ html, body, #root {
   width: 100%;
   height: 100%;
   min-width: 360px;
+  background: transparent;
 }
 
 @media (max-width: 359px) {
@@ -52,5 +80,11 @@ html, body, #root {
   
   .app-canvas {
     min-width: 360px;
+  }
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 1) {
+  html {
+    background-attachment: scroll !important;
   }
 }
