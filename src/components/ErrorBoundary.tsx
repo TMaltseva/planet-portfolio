@@ -40,7 +40,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
     if (this.state.hasError) {
       return (
         <div style={{
-          color: 'black',
+          color: '#545454',
           padding: '20px',
           textAlign: 'center',
           backgroundColor: '#f8f8f8',
@@ -70,8 +70,8 @@ export class ErrorBoundary extends React.Component<Props, State> {
             style={{
               marginTop: '20px',
               padding: '10px 20px',
-              backgroundColor: 'linear-gradient(135deg, #ff6ea8, #5d2a66, #ab47bc);',
-              color: '#1e1e1e',
+              backgroundColor: '#ff6ea8',
+              color: '#ffffff',
               border: 'none',
               borderRadius: '4px',
               cursor: 'pointer'

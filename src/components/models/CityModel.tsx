@@ -10,7 +10,7 @@ export default function CityModel ({ isMobile = false }: CityModelProps) {
   const { scene } = useGLTF('models/scene.gltf');
   const cityRef = useRef<Group>(null);
 
-  const position = isMobile ? [0, -10, 0] : [20, 5, 0];
+  const position = isMobile ? [0, -5, 0] : [20, 5, 0];
   const scale = isMobile ? 0.007 : 0.01;
 
   useEffect(() => {
