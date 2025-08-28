@@ -1,15 +1,5 @@
 import { useState, useEffect } from "react";
-
-interface DeviceCapabilities {
-  supportsWebGL: boolean;
-  supportsWebGL2: boolean;
-  deviceMemory: number;
-  hardwareConcurrency: number;
-  maxTextureSize: number;
-  isLowEndDevice: boolean;
-  shouldReduceAnimations: boolean;
-  prefersReducedMotion: boolean;
-}
+import { DeviceCapabilities } from "../types";
 
 interface ExtendedNavigator extends Navigator {
   deviceMemory?: number;
@@ -50,16 +40,22 @@ export function useDeviceCapabilities(): DeviceCapabilities {
         "(prefers-reduced-motion: reduce)"
       ).matches;
 
-      const isLowEndDevice =
-        deviceMemory <= 2 ||
-        hardwareConcurrency <= 2 ||
-        maxTextureSize < 2048 ||
-        !gl ||
-        /Android 4|iPhone [1-6]/i.test(navigator.userAgent);
+      const isLowEndDevice = !gl || prefersReducedMotion;
 
       const shouldReduceAnimations = isLowEndDevice || prefersReducedMotion;
 
       setCapabilities({
+        supportsWebGL: !!gl,
+        supportsWebGL2: !!gl2,
+        deviceMemory,
+        hardwareConcurrency,
+        maxTextureSize,
+        isLowEndDevice,
+        shouldReduceAnimations,
+        prefersReducedMotion,
+      });
+
+      console.log("Device capabilities:", {
         supportsWebGL: !!gl,
         supportsWebGL2: !!gl2,
         deviceMemory,

@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useRef } from 'react';
-import { TextureLoader, Group, Sprite, SpriteMaterial, MathUtils } from 'three';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { TextureLoader, Group, Sprite, SpriteMaterial, MathUtils, Texture } from 'three';
 import { useFrame } from '@react-three/fiber';
 import { useJellyAssets } from '../../hooks/useJellyAssets';
 import { useModalContext } from '../../contexts/ModalContext';
@@ -7,7 +7,6 @@ import { useModalContext } from '../../contexts/ModalContext';
 interface JellySpec {
   textureUrl: string;
   baseScale: number;
-  speed: number;
   x: number;
   y: number;
   z: number;
@@ -19,30 +18,68 @@ export default function JellySprites() {
   const groupRef = useRef<Group>(null);
   const loaderRef = useRef(new TextureLoader());
   const { showModal } = useModalContext();
+  const [sprites, setSprites] = useState<Sprite[]>([]);
   
   const urls = useJellyAssets();
 
   const jellies: JellySpec[] = useMemo(() => {
-    return urls.map((url, index) => {
-      const seed = index * 12345;
+    if (urls.length === 0) return [];
+    
+    const targetCount = 15;
+    const jelliesArray = [];
+    
+    for (let i = 0; i < targetCount; i++) {
+      const urlIndex = i % urls.length;
+      const url = urls[urlIndex];
+      const seed = i * 12345;
       
-      return {
+      jelliesArray.push({
         textureUrl: url,
         baseScale: MathUtils.lerp(6.0, 12.0, (Math.sin(seed) + 1) / 2),
-        speed: 0,
         x: MathUtils.lerp(-400, 350, (Math.sin(seed * 1.1) + 1) / 2),
         y: MathUtils.lerp(-10, 35, (Math.sin(seed * 1.3) + 1) / 2),
         z: MathUtils.lerp(-200, -80, (Math.sin(seed * 1.7) + 1) / 2),
         phase: ((Math.sin(seed * 2.1) + 1) / 2) * Math.PI * 2,
         opacity: MathUtils.lerp(0.9, 1, (Math.sin(seed * 3.3) + 1) / 2),
-      };
-    });
+      });
+    }
+    
+    return jelliesArray;
   }, [urls.length]);
 
-  const sprites = useMemo(() => {
-    return jellies.map((jelly) => {
-      const texture = loaderRef.current.load(jelly.textureUrl);
-      texture.premultiplyAlpha = true;
+  useEffect(() => {
+    if (jellies.length === 0) return;
+    
+    const textureCache = new Map<string, Texture>();
+    const newSprites: Sprite[] = [];
+    let loadedCount = 0;
+    
+    jellies.forEach((jelly, index) => {
+      let texture = textureCache.get(jelly.textureUrl);
+      if (!texture) {
+        texture = loaderRef.current.load(
+          jelly.textureUrl,
+          () => {
+            loadedCount++;
+            if (loadedCount === jellies.length) {
+              setSprites([...newSprites]);
+            }
+          },
+          undefined,
+          (error) => {
+            if (process.env.NODE_ENV === 'development') {
+              console.warn('Failed to load texture:', jelly.textureUrl, error);
+            }            loadedCount++;
+            if (loadedCount === jellies.length) {
+              setSprites([...newSprites]);
+            }
+          }
+        );
+        texture.premultiplyAlpha = true;
+        textureCache.set(jelly.textureUrl, texture);
+      } else {
+        loadedCount++;
+      }
       
       const material = new SpriteMaterial({ 
         map: texture, 
@@ -63,23 +100,46 @@ export default function JellySprites() {
         phase: jelly.phase
       };
       
-      return sprite;
+      newSprites[index] = sprite;
     });
+    
+    if (loadedCount === jellies.length) {
+      setSprites(newSprites);
+    }
+    
+    return () => {
+      newSprites.forEach(sprite => {
+        if (sprite && sprite.material) {
+          if (sprite.material.map) {
+            sprite.material.map.dispose();
+          }
+          sprite.material.dispose();
+        }
+      });
+    };
   }, [jellies]);
 
   useEffect(() => {
     const group = groupRef.current;
-    if (!group) return;
-    sprites.forEach((s) => group.add(s));
+    if (!group || sprites.length === 0) return;
+    
+    sprites.forEach((sprite) => {
+      if (sprite) group.add(sprite);
+    });
+    
     return () => {
-      sprites.forEach((s) => group.remove(s));
+      sprites.forEach((sprite) => {
+        if (sprite && group) group.remove(sprite);
+      });
     };
   }, [sprites]);
 
   useFrame((state) => {
-    if (showModal) return;
+    if (showModal || sprites.length === 0) return;
     
     sprites.forEach((sprite) => {
+      if (!sprite || !sprite.userData) return;
+      
       const userData = sprite.userData;
       const t = state.clock.elapsedTime + userData.phase;
       

@@ -4,6 +4,7 @@ import { useGLTF } from '@react-three/drei';
 import { Group } from 'three';
 import * as THREE from 'three';
 import { useModalContext } from '../../contexts/ModalContext';
+import { useResponsive } from '../../hooks/useResponsive';
 
 interface PlaneInstanceProps {
   startX: number;
@@ -109,12 +110,14 @@ function PlaneInstance({ startX, endX, y, z, speed, scale, rotationY }: PlaneIns
 }
 
 export default function PlaneFlyover() {
+  const { isMobile } = useResponsive();
+
   const planes = useMemo(() => [
     {
       startX: -250,
       endX: 500,
-      y: 15,
-      z: -25,
+      y: isMobile ? 8 : 15,
+      z: isMobile ? -15 : -25,
       speed: 20,
       scale: 1.5,
       rotationY: Math.PI,

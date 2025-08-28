@@ -288,7 +288,7 @@
 }
 
 .modal-jelly-left {
-  top: 20%;
+  top: 15%;
   left: -40px;
   transform: rotate(-15deg);
   animation-delay: 0s;
@@ -368,5 +368,29 @@
   
   .app-container {
     min-height: -webkit-fill-available;
+  }
+}
+
+@media screen and (max-width: 767px) and (max-height: 500px) and (orientation: landscape) {
+  .modal-overlay {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    height: 100vh;
+    height: 100dvh;
+  }
+  
+  .modal-content {
+    justify-content: flex-start;
+  }
+  
+  @supports (-webkit-touch-callout: none) {
+    .modal-overlay {
+      height: -webkit-fill-available;
+      padding-top: max(env(safe-area-inset-top), 60px);
+    }
+    
+    .modal-content {
+      max-height: calc(-webkit-fill-available - 120px);
+    }
   }
 }

@@ -182,17 +182,17 @@ export default function Modal({ showModal, selectedPoint, onClose }: ModalProps)
                 {selectedPoint.id === 'about' && (
                   <div>
                     <p><strong>Experience:</strong> 2+ years</p>
-                    <p> — </p>
+                    <br></br>
                     <p><strong>Specialization:</strong> Frontend and creative dev</p>
-                    <p> — </p>
+                    <br></br>
                     <p>I'm interested in creative systems building/mastering a 2D/3D engine. My passion is good design and high functionality of the surrounding space.</p>
                   </div>
                 )}
                 {selectedPoint.id === 'skills' && (
                   <div>
-                    <p><strong>Frontend:</strong> React, TypeScript, MobX, Jenkins, Storybook, Three.js, Phazer</p>
-                    <p> — </p>
+                    <p><strong>Frontend:</strong> React, TypeScript, MobX, Redux, Next.js</p>
                     <p><strong>Backend:</strong> Node.js, PostgreSQL</p>
+                    <p><strong>Creative dev:</strong> Three.js, Pixi.js, Phaser</p>
                   </div>
                 )}
                 {selectedPoint.id === 'projects' && (
@@ -253,13 +253,13 @@ export default function Modal({ showModal, selectedPoint, onClose }: ModalProps)
                             <strong>My email</strong> 
                         </a>
                     </p>
-                    <p> — </p>
+                    <br></br>
                     <p>
                         <a href="https://github.com/TMaltseva" target="_blank" rel="noopener noreferrer" className="contact-link">
                             <strong>My GitHub</strong> 
                         </a>
                     </p>
-                    <p> — </p>
+                    <br></br>
                     <p>
                         <a href="https://linkedin.com/in/tamara-maltseva-364292179" target="_blank" rel="noopener noreferrer" className="contact-link">
                         <strong>My LinkedIn</strong> 

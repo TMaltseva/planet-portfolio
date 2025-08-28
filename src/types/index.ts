@@ -54,3 +54,14 @@ export interface TouchSettings {
 export interface AdaptiveTourPoint extends TourPoint {
   mobilePosition?: [number, number, number];
 }
+
+export interface DeviceCapabilities {
+  supportsWebGL: boolean;
+  supportsWebGL2: boolean;
+  deviceMemory: number;
+  hardwareConcurrency: number;
+  maxTextureSize: number;
+  isLowEndDevice: boolean;
+  shouldReduceAnimations: boolean;
+  prefersReducedMotion: boolean;
+}

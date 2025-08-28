@@ -17,6 +17,8 @@ import { useResponsive } from './hooks/useResponsive';
 import Header from './components/Header';
 import { usePreloadModels } from './hooks/usePreloadModels';
 import { ModalProvider } from './contexts/ModalContext';
+import { CompatibilityWarning } from './components/ui/CompatibilityWarning';
+import { useDeviceCapabilities } from './hooks/useDeviceCapabilities';
 
 import './App.css';
 
@@ -35,9 +37,17 @@ export default function App() {
     const [_introComplete, setIntroComplete] = useState(false);
     const [orbitControlsReady, setOrbitControlsReady] = useState(false);
     const { isMobile } = useResponsive();
+    const capabilities = useDeviceCapabilities();
+
+    const pixelRatio = capabilities.isLowEndDevice ? 1 : Math.min(window.devicePixelRatio, 2);
+    // const antialias = !capabilities.isLowEndDevice;    
+    const shouldShowClouds = !capabilities.shouldReduceAnimations;
+    const shouldShowJellySprites = !capabilities.isLowEndDevice;
+    const shouldShowPlane = !capabilities.shouldReduceAnimations;
 
   return (
     <div className="app-container">
+      <CompatibilityWarning capabilities={capabilities} />
       <ScreenLoader />
       <ModalProvider showModal={showModal}>
         <Canvas
@@ -48,25 +58,39 @@ export default function App() {
             far: 1000,
           }}
           className="app-canvas"
+          // gl={{ 
+          //   antialias: antialias,
+          //   alpha: true,
+          //   premultipliedAlpha: false,
+          //   preserveDrawingBuffer: false,
+          //   powerPreference: capabilities.isLowEndDevice ? 'low-power' : 'high-performance',
+          // }}
+          dpr={pixelRatio}
+          performance={{ 
+            min: capabilities.isLowEndDevice ? 0.2 : 0.5 
+          }}
         >
           <ambientLight intensity={0.2} />
           <directionalLight 
             position={[50, 50, 25]} 
             intensity={0.7}
-            castShadow
-            shadow-mapSize-width={2048}
-            shadow-mapSize-height={2048}
+            castShadow={!capabilities.isLowEndDevice}
+            shadow-mapSize-width={capabilities.isLowEndDevice ? 1024 : 2048}
+            shadow-mapSize-height={capabilities.isLowEndDevice ? 1024 : 2048}
           />
           
           <pointLight position={[-20, 20, 20]} intensity={0.1} />
           
-          <Environment preset="dawn" environmentIntensity={0.8}/>
+          <Environment 
+            preset="dawn"
+            environmentIntensity={capabilities.isLowEndDevice ? 0.5 : 0.8}
+          />
           
           <Suspense fallback={null}>
             <SceneContainer isMobile={isMobile}>
-              <CloudsBackground />
-              <JellySprites />
-              <PlaneFlyover />
+              {shouldShowClouds && <CloudsBackground />}
+              {shouldShowJellySprites && <JellySprites />}
+              {shouldShowPlane && <PlaneFlyover />}
               <CityModel isMobile={isMobile} />
 
               {TOUR_POINTS.map((point, index) => (

@@ -1,5 +1,5 @@
 import { useGLTF } from '@react-three/drei';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Group, Mesh, MeshStandardMaterial, MeshBasicMaterial } from 'three';
 
 interface CityModelProps {
@@ -9,9 +9,24 @@ interface CityModelProps {
 export default function CityModel ({ isMobile = false }: CityModelProps) {
   const { scene } = useGLTF('models/scene.gltf');
   const cityRef = useRef<Group>(null);
+  const [isLandscape, setIsLandscape] = useState(false);
 
-  const position = isMobile ? [0, -5, 0] : [20, 5, 0];
-  const scale = isMobile ? 0.007 : 0.01;
+  useEffect(() => {
+    if (!isMobile) return;
+  
+    const checkOrientation = () => {
+      setIsLandscape(window.innerWidth > window.innerHeight);
+    };
+        
+    checkOrientation();
+    window.addEventListener('resize', checkOrientation);
+    window.addEventListener('orientationchange', checkOrientation);
+        
+    return () => {
+      window.removeEventListener('resize', checkOrientation);
+      window.removeEventListener('orientationchange', checkOrientation);
+    };
+  }, [isMobile]);
 
   useEffect(() => {
     if (cityRef.current) {
@@ -64,6 +79,18 @@ export default function CityModel ({ isMobile = false }: CityModelProps) {
       });
     }
   }, [scene]);
+
+  const getPosition = (): [number, number, number] => {
+    if (isMobile && !isLandscape) {
+      return [0, -5, 0];
+    } else if (isMobile && isLandscape) {
+      return [0, -10, 0];
+    }
+    return [20, 5, 0];
+  };
+
+  const position = getPosition();
+  const scale = isMobile ? 0.007 : 0.01;
 
   return (
     <group ref={cityRef}>
