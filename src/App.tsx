@@ -17,7 +17,6 @@ import { useResponsive } from './hooks/useResponsive';
 import Header from './components/Header';
 import { usePreloadModels } from './hooks/usePreloadModels';
 import { ModalProvider } from './contexts/ModalContext';
-// import { performanceMonitor } from './utils/performanceMonitor';
 
 import './App.css';
 
@@ -36,26 +35,6 @@ export default function App() {
     const [_introComplete, setIntroComplete] = useState(false);
     const [orbitControlsReady, setOrbitControlsReady] = useState(false);
     const { isMobile } = useResponsive();
-
-    // useEffect(() => {
-    //   performanceMonitor.startMonitoring();
-      
-    //   return () => {
-    //     performanceMonitor.stopMonitoring();
-    //   };
-    // }, []);
-
-    // useEffect(() => {
-    //   if (showModal) {
-    //     console.log('🎯 Modal opened - Animations stopped for performance optimization');
-    //     console.log('💡 Expected benefits:');
-    //     console.log('   • Reduced GPU load by ~30%');
-    //     console.log('   • Saved battery on mobile devices');
-    //     console.log('   • Improved frame rate stability');
-    //   } else {
-    //     console.log('🎯 Modal closed - Animations resumed');
-    //   }
-    // }, [showModal]);
 
   return (
     <div className="app-container">

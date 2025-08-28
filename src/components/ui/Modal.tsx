@@ -2,7 +2,6 @@ import React, { useState, useMemo, useEffect } from 'react';
 import type { TourPoint } from '../../types';
 import { useJellyAssets } from '../../hooks/useJellyAssets';
 import { getRandomJellyElements } from '../../utils/getRandomJellyElements';
-// import { performanceMonitor } from '../../utils/performanceMonitor';
 
 interface ModalProps {
   showModal: boolean;
@@ -45,15 +44,7 @@ export default function Modal({ showModal, selectedPoint, onClose }: ModalProps)
     useEffect(() => {
       if (showModal) {
         setJellyLoaded({});
-        
-        // setTimeout(() => {
-        //   const stats = performanceMonitor.getPerformanceStats();
-        //   if (stats) {
-        //     setPerformanceStats(stats);
-        //   }
-        // }, 1000);
       }
-    // }, [selectedPoint?.id, showModal]);
   }, [selectedPoint?.id]);
     if (!showModal || !selectedPoint) return null;
 
