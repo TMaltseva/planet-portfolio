@@ -185,7 +185,13 @@ export default function Modal({ showModal, selectedPoint, onClose }: ModalProps)
                     <br></br>
                     <p><strong>Specialization:</strong> Frontend and creative dev</p>
                     <br></br>
-                    <p>I'm interested in creative systems building/mastering a 2D/3D engine. My passion is good design and high functionality of the surrounding space.</p>
+                    <p>I am creative web-developer and interested in 2D/3D technologies and constantly improve my skills. I am inspired by working with Three.js animations, studying Phaser, Pixi.js, and experimenting with next-level interfaces.</p>
+                    <br></br>
+                    <p>
+                      <a href="https://t.me/creative_dev_diary" target="_blank" rel="noopener noreferrer" className="contact-link tg-link">
+                        My chanel about creative dev
+                      </a>
+                    </p>
                   </div>
                 )}
                 {selectedPoint.id === 'skills' && (

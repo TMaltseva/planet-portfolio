@@ -81,6 +81,10 @@
   text-shadow: 0 0 15px rgba(255, 110, 168, 0.4);
 }
 
+.tg-link {
+  font-weight: 700;
+}
+
 .certificates-section {
   width: 100%;
   margin: 20px 0;
